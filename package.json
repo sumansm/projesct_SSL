@@ -1,1 +1,11 @@
-
+{
+  "name": "docker-node-app",
+  "version": "1.0.0",
+  "description": "Simple Node.js app using Convesio V4",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Suman Mondal",
+  "license": "MIT"
+}
