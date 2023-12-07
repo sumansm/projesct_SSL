@@ -4,8 +4,8 @@ services:
       type: docker
       image: node:latest
       copy:
-        - ./package.json:/usr/src/app
-        - ./app.js:/usr/src/app
+        - ./package.json:/usr/src/app/package.json
+        - ./app.js:/usr/src/app/app.js
       boot: apache2
       first_run: "npm start"
     environment:
