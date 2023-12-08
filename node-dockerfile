@@ -1,1 +1,11 @@
+FROM node:latest
 
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/package.json
+
+COPY app.js /usr/src/app/app.js
+
+RUN npm install
+
+CMD ["npm", "start"]
