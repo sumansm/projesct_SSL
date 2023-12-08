@@ -1,5 +1,5 @@
 import:
-    -convesio/redis
+    - convesio/redis
 services:
   node:
     source:
