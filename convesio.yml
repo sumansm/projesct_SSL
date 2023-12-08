@@ -2,12 +2,11 @@ services:
   node:
     source:
       type: docker
-      image: node:latest
-      copy:
-        - ./package.json:/usr/src/app/package.json
-        - ./app.js:/usr/src/app/app.js
-      boot: apache2
-      first_run: "npm start"
+      # image: node:latest
+      build: ./node-dockerfile
+      # copy:
+      #   - ./package.json:/usr/src/app/package.json
+      #   - ./app.js:/usr/src/app/app.js
     environment:
       APPLICATION_TYPE: NODE
       DEVELOPMENT_MODE: development
@@ -15,12 +14,7 @@ services:
       WORDPRESS_DB_NAME: "${my_database_name}"
       WORDPRESS_DB_USER: "${my_database_user}"
       WORDPRESS_DB_PASSWORD: "${my_database_pass}"
-    # mount:
-    #   - uploads:/var/www/html/wp-contents/uploads
-    #   - cache:/var/cache/convesio
     route:
-    #   - 8999:6500/https
-    #   - 22:2222/ssh
       - 00:3000/default
     ingress: true
     scale:
