@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSL Certificate Checker</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #007BFF;
+    }
+
+    form {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input {
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #resultContainer {
+      margin-top: 20px;
+      text-align: left;
+      max-width: 600px;
+    }
+
+    h2 {
+      color: #007BFF;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    strong {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>SSL Certificate Checker</h1>
+  <form id="sslForm">
+    <label for="domain">Enter Domain:</label>
+    <input type="text" id="domain" name="domain" required>
+    <button type="submit">Check SSL</button>
+  </form>
+  <div id="resultContainer"></div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#sslForm').submit(function (e) {
+        e.preventDefault();
+        const domain = $('#domain').val();
+        $.post('/check', { domain }, function (data) {
+          displayResult(data);
+        });
+      });
+
+      function displayResult(data) {
+        const resultContainer = $('#resultContainer');
+        resultContainer.empty();
+
+        if (data.success) {
+          const certificateData = data.certificateData;
+          resultContainer.append('<h2>SSL Certificate Details</h2>');
+          resultContainer.append(`<p><strong>Subject:</strong> ${certificateData.subject.CN}</p>`);
+          resultContainer.append(`<p><strong>Issuer:</strong> ${certificateData.issuer.CN}</p>`);
+          resultContainer.append(`<p><strong>Valid From:</strong> ${certificateData.valid_from}</p>`);
+          resultContainer.append(`<p><strong>Valid To:</strong> ${certificateData.valid_to}</p>`);
+        } else {
+          resultContainer.append('<h2>Error</h2>');
+          resultContainer.append(`<p>${data.error}</p>`);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
