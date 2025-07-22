@@ -1,112 +1,1166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SSL Certificate Checker</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL Checker Pro - Enterprise Certificate Validation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        :root {
+            /* Professional Color Palette */
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-200: #bfdbfe;
+            --primary-300: #93c5fd;
+            --primary-400: #60a5fa;
+            --primary-500: #3b82f6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-800: #1e40af;
+            --primary-900: #1e3a8a;
+            
+            --secondary-50: #f8fafc;
+            --secondary-100: #f1f5f9;
+            --secondary-200: #e2e8f0;
+            --secondary-300: #cbd5e1;
+            --secondary-400: #94a3b8;
+            --secondary-500: #64748b;
+            --secondary-600: #475569;
+            --secondary-700: #334155;
+            --secondary-800: #1e293b;
+            --secondary-900: #0f172a;
+            
+            --success-50: #f0fdf4;
+            --success-100: #dcfce7;
+            --success-500: #22c55e;
+            --success-600: #16a34a;
+            --success-700: #15803d;
+            
+            --warning-50: #fffbeb;
+            --warning-100: #fef3c7;
+            --warning-500: #f59e0b;
+            --warning-600: #d97706;
+            --warning-700: #b45309;
+            
+            --error-50: #fef2f2;
+            --error-100: #fee2e2;
+            --error-500: #ef4444;
+            --error-600: #dc2626;
+            --error-700: #b91c1c;
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            --font-size-5xl: 3rem;
+            
+            /* Spacing */
+            --spacing-1: 0.25rem;
+            --spacing-2: 0.5rem;
+            --spacing-3: 0.75rem;
+            --spacing-4: 1rem;
+            --spacing-5: 1.25rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            --spacing-10: 2.5rem;
+            --spacing-12: 3rem;
+            --spacing-16: 4rem;
+            --spacing-20: 5rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-2xl: 2rem;
+            
+            /* Transitions */
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    h1 {
-      color: #007BFF;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    form {
-      margin-top: 20px;
-      text-align: center;
-    }
+        body {
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, var(--primary-900) 0%, var(--secondary-900) 100%);
+            min-height: 100vh;
+            color: var(--secondary-800);
+            line-height: 1.6;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
 
-    label {
-      font-weight: bold;
-    }
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
 
-    input {
-      padding: 8px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-100);
+        }
 
-    button {
-      background-color: #007BFF;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-300);
+            border-radius: var(--radius);
+        }
 
-    button:hover {
-      background-color: #0056b3;
-    }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-400);
+        }
 
-    #resultContainer {
-      margin-top: 20px;
-      text-align: left;
-      max-width: 600px;
-    }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-8);
+        }
 
-    h2 {
-      color: #007BFF;
-    }
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: var(--spacing-16);
+            color: white;
+            position: relative;
+        }
 
-    p {
-      margin-bottom: 10px;
-    }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+        }
 
-    strong {
-      font-weight: bold;
-    }
-  </style>
+        .header h1 {
+            font-size: var(--font-size-5xl);
+            font-weight: 800;
+            margin-bottom: var(--spacing-4);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: var(--font-size-xl);
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: var(--spacing-2) var(--spacing-4);
+            border-radius: var(--radius-2xl);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            margin-top: var(--spacing-4);
+            color: var(--primary-200);
+        }
+
+        /* Main Card */
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-2xl);
+            overflow: hidden;
+            margin-bottom: var(--spacing-8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: var(--secondary-50);
+            border-bottom: 1px solid var(--secondary-200);
+            position: relative;
+        }
+
+        .tabs::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--primary-200) 50%, transparent 100%);
+        }
+
+        .tab {
+            flex: 1;
+            padding: var(--spacing-6) var(--spacing-8);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--secondary-600);
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-3);
+        }
+
+        .tab.active {
+            color: var(--primary-700);
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(59, 130, 246, 0.05);
+            color: var(--primary-600);
+        }
+
+        .tab i {
+            font-size: var(--font-size-lg);
+        }
+
+        .tab-content {
+            display: none;
+            padding: var(--spacing-12);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: var(--spacing-8);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-3);
+            font-weight: 600;
+            color: var(--secondary-800);
+            font-size: var(--font-size-base);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-4) var(--spacing-5);
+            border: 2px solid var(--secondary-200);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            transition: var(--transition);
+            background: white;
+            font-family: var(--font-family);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder {
+            color: var(--secondary-400);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: var(--spacing-4) var(--spacing-8);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            font-family: var(--font-family);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary-500) 0%, var(--secondary-600) 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--secondary-600) 0%, var(--secondary-700) 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading States */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: var(--spacing-12);
+        }
+
+        .spinner {
+            border: 4px solid var(--secondary-200);
+            border-top: 4px solid var(--primary-600);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-6);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            color: var(--secondary-600);
+            font-weight: 500;
+        }
+
+        /* Results */
+        .result-container {
+            margin-top: var(--spacing-8);
+            display: none;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-8);
+            margin-bottom: var(--spacing-6);
+            border-left: 6px solid var(--primary-500);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, transparent 50%, rgba(59, 130, 246, 0.05) 50%);
+            border-radius: 0 var(--radius-xl) 0 100px;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-6);
+            padding-bottom: var(--spacing-6);
+            border-bottom: 2px solid var(--secondary-100);
+        }
+
+        .result-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--secondary-800);
+        }
+
+        .status-badge {
+            padding: var(--spacing-2) var(--spacing-4);
+            border-radius: var(--radius-2xl);
+            font-size: var(--font-size-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-valid {
+            background: var(--success-50);
+            color: var(--success-700);
+            border: 1px solid var(--success-200);
+        }
+
+        .status-error {
+            background: var(--error-50);
+            color: var(--error-700);
+            border: 1px solid var(--error-200);
+        }
+
+        .status-warning {
+            background: var(--warning-50);
+            color: var(--warning-700);
+            border: 1px solid var(--warning-200);
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .info-section {
+            background: var(--secondary-50);
+            padding: var(--spacing-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--secondary-200);
+            position: relative;
+        }
+
+        .info-section h4 {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            margin-bottom: var(--spacing-4);
+            color: var(--secondary-800);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .info-section h4 i {
+            color: var(--primary-600);
+            font-size: var(--font-size-xl);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-3) 0;
+            border-bottom: 1px solid var(--secondary-200);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--secondary-600);
+            font-size: var(--font-size-sm);
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: var(--secondary-800);
+            text-align: right;
+            word-break: break-all;
+            font-size: var(--font-size-sm);
+        }
+
+        /* Batch Input */
+        .batch-input {
+            min-height: 150px;
+            resize: vertical;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: var(--font-size-sm);
+        }
+
+        /* Messages */
+        .error-message {
+            background: var(--error-50);
+            border: 1px solid var(--error-200);
+            color: var(--error-700);
+            padding: var(--spacing-4);
+            border-radius: var(--radius-lg);
+            margin-top: var(--spacing-4);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .success-message {
+            background: var(--success-50);
+            border: 1px solid var(--success-200);
+            color: var(--success-700);
+            padding: var(--spacing-4);
+            border-radius: var(--radius-lg);
+            margin-top: var(--spacing-4);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        /* Statistics */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .stat-card {
+            background: white;
+            padding: var(--spacing-8);
+            border-radius: var(--radius-xl);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--secondary-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+        }
+
+        .stat-number {
+            font-size: var(--font-size-4xl);
+            font-weight: 800;
+            color: var(--primary-600);
+            margin-bottom: var(--spacing-2);
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--secondary-600);
+            font-weight: 600;
+            font-size: var(--font-size-base);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: var(--spacing-12);
+            padding: var(--spacing-8);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer p {
+            font-size: var(--font-size-sm);
+            font-weight: 400;
+        }
+
+        /* Fallback icons */
+        .icon-shield::before { content: "🛡️"; }
+        .icon-search::before { content: "🔍"; }
+        .icon-list::before { content: "📋"; }
+        .icon-chart::before { content: "📊"; }
+        .icon-user::before { content: "👤"; }
+        .icon-cert::before { content: "📜"; }
+        .icon-calendar::before { content: "📅"; }
+        .icon-cog::before { content: "⚙️"; }
+        .icon-network::before { content: "🌐"; }
+        .icon-trash::before { content: "🗑️"; }
+        .icon-warning::before { content: "⚠️"; }
+        .icon-check::before { content: "✅"; }
+        .icon-error::before { content: "❌"; }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                padding: var(--spacing-6);
+            }
+            
+            .header h1 {
+                font-size: var(--font-size-4xl);
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-4);
+            }
+            
+            .header h1 {
+                font-size: var(--font-size-3xl);
+            }
+            
+            .header p {
+                font-size: var(--font-size-lg);
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                text-align: center;
+                padding: var(--spacing-4);
+            }
+
+            .tab-content {
+                padding: var(--spacing-6);
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .result-header {
+                flex-direction: column;
+                gap: var(--spacing-4);
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: var(--font-size-2xl);
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>SSL Certificate Checker</h1>
-  <form id="sslForm">
-    <label for="domain">Enter Domain:</label>
-    <input type="text" id="domain" name="domain" required>
-    <button type="submit">Check SSL</button>
-  </form>
-  <div id="resultContainer"></div>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-shield-alt icon-shield"></i> SSL Checker Pro</h1>
+            <p>Enterprise-grade SSL certificate validation and security analysis platform</p>
+            <div class="badge">
+                <i class="fas fa-shield-alt"></i> Free • Secure • Private
+            </div>
+        </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      $('#sslForm').submit(function (e) {
-        e.preventDefault();
-        const domain = $('#domain').val();
-        $.post('/check', { domain }, function (data) {
-          displayResult(data);
-        });
-      });
+        <div class="main-card">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('single')">
+                    <i class="fas fa-search icon-search"></i> Single Check
+                </button>
+                <button class="tab" onclick="switchTab('batch')">
+                    <i class="fas fa-list icon-list"></i> Batch Check
+                </button>
+                <button class="tab" onclick="switchTab('stats')">
+                    <i class="fas fa-chart-bar icon-chart"></i> Analytics
+                </button>
+            </div>
 
-      function displayResult(data) {
-        const resultContainer = $('#resultContainer');
-        resultContainer.empty();
+            <!-- Single Check Tab -->
+            <div id="single-tab" class="tab-content active">
+                <form id="sslForm">
+                    <div class="form-group">
+                        <label for="domain" class="form-label">Domain Name</label>
+                        <input type="text" id="domain" name="domain" class="form-input" 
+                               placeholder="Enter domain (e.g., google.com, github.com)" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="checkBtn">
+                        <i class="fas fa-search icon-search"></i> Analyze SSL Certificate
+                    </button>
+                </form>
 
-        if (data.success) {
-          const certificateData = data.certificateData;
-          resultContainer.append('<h2>SSL Certificate Details</h2>');
-          resultContainer.append(`<p><strong>Subject:</strong> ${certificateData.subject.CN}</p>`);
-          resultContainer.append(`<p><strong>Issuer:</strong> ${certificateData.issuer.CN}</p>`);
-          resultContainer.append(`<p><strong>Valid From:</strong> ${certificateData.valid_from}</p>`);
-          resultContainer.append(`<p><strong>Valid To:</strong> ${certificateData.valid_to}</p>`);
-        } else {
-          resultContainer.append('<h2>Error</h2>');
-          resultContainer.append(`<p>${data.error}</p>`);
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing SSL certificate and security configuration...</p>
+                </div>
+
+                <div class="result-container" id="resultContainer"></div>
+            </div>
+
+            <!-- Batch Check Tab -->
+            <div id="batch-tab" class="tab-content">
+                <form id="batchForm">
+                    <div class="form-group">
+                        <label for="domains" class="form-label">Domain List (one per line)</label>
+                        <textarea id="domains" name="domains" class="form-input batch-input" 
+                                  placeholder="Enter domains, one per line:&#10;google.com&#10;github.com&#10;stackoverflow.com&#10;microsoft.com&#10;apple.com" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="batchBtn">
+                        <i class="fas fa-list icon-list"></i> Analyze All Domains
+                    </button>
+                </form>
+
+                <div class="loading" id="batchLoading">
+                    <div class="spinner"></div>
+                    <p>Processing batch analysis...</p>
+                </div>
+
+                <div class="result-container" id="batchResultContainer"></div>
+            </div>
+
+            <!-- Statistics Tab -->
+            <div id="stats-tab" class="tab-content">
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalChecks">0</div>
+                        <div class="stat-label">Total Analyses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="validCerts">0</div>
+                        <div class="stat-label">Valid Certificates</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="expiredCerts">0</div>
+                        <div class="stat-label">Expired Certificates</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="errorCerts">0</div>
+                        <div class="stat-label">Errors</div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="clearStats()">
+                    <i class="fas fa-trash icon-trash"></i> Clear Analytics
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 SSL Checker Pro. Enterprise-grade security validation platform.</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        // Global variables
+        let stats = {
+            totalChecks: 0,
+            validCerts: 0,
+            expiredCerts: 0,
+            errorCerts: 0
+        };
+
+        // Load stats from localStorage
+        function loadStats() {
+            const saved = localStorage.getItem('sslCheckerStats');
+            if (saved) {
+                stats = JSON.parse(saved);
+                updateStatsDisplay();
+            }
         }
-      }
-    });
-  </script>
+
+        // Save stats to localStorage
+        function saveStats() {
+            localStorage.setItem('sslCheckerStats', JSON.stringify(stats));
+        }
+
+        // Update stats display
+        function updateStatsDisplay() {
+            $('#totalChecks').text(stats.totalChecks);
+            $('#validCerts').text(stats.validCerts);
+            $('#expiredCerts').text(stats.expiredCerts);
+            $('#errorCerts').text(stats.errorCerts);
+        }
+
+        // Clear statistics
+        function clearStats() {
+            stats = {
+                totalChecks: 0,
+                validCerts: 0,
+                expiredCerts: 0,
+                errorCerts: 0
+            };
+            saveStats();
+            updateStatsDisplay();
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            $('.tab').removeClass('active');
+            $('.tab-content').removeClass('active');
+            
+            $(`.tab:contains('${tabName === 'single' ? 'Single Check' : tabName === 'batch' ? 'Batch Check' : 'Analytics'}')`).addClass('active');
+            $(`#${tabName}-tab`).addClass('active');
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+
+        // Display single check result
+        function displayResult(data) {
+            const resultContainer = $('#resultContainer');
+            resultContainer.empty().show();
+            
+            if (data.success) {
+                const cert = data.certificate;
+                const statusClass = cert.validity.isExpired ? 'status-warning' : 'status-valid';
+                const statusText = cert.validity.isExpired ? 'Expired' : 'Valid';
+                
+                const resultHtml = `
+                    <div class="result-card">
+                        <div class="result-header">
+                            <h3 class="result-title">SSL Certificate Analysis</h3>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        
+                        <div class="info-grid">
+                            <div class="info-section">
+                                <h4><i class="fas fa-user icon-user"></i> Subject Information</h4>
+                                <div class="info-item">
+                                    <span class="info-label">Common Name:</span>
+                                    <span class="info-value">${cert.subject.commonName}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Organization:</span>
+                                    <span class="info-value">${cert.subject.organization}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Country:</span>
+                                    <span class="info-value">${cert.subject.country}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-section">
+                                <h4><i class="fas fa-certificate icon-cert"></i> Issuer Information</h4>
+                                <div class="info-item">
+                                    <span class="info-label">Issuer:</span>
+                                    <span class="info-value">${cert.issuer.commonName}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Organization:</span>
+                                    <span class="info-value">${cert.issuer.organization}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Country:</span>
+                                    <span class="info-value">${cert.issuer.country}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-section">
+                                <h4><i class="fas fa-calendar icon-calendar"></i> Validity Period</h4>
+                                <div class="info-item">
+                                    <span class="info-label">Valid From:</span>
+                                    <span class="info-value">${formatDate(cert.validity.from)}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Valid To:</span>
+                                    <span class="info-value">${formatDate(cert.validity.to)}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Days Until Expiry:</span>
+                                    <span class="info-value">${cert.validity.daysUntilExpiry}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-section">
+                                <h4><i class="fas fa-cog icon-cog"></i> Technical Details</h4>
+                                <div class="info-item">
+                                    <span class="info-label">Protocol:</span>
+                                    <span class="info-value">${cert.protocol}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Cipher:</span>
+                                    <span class="info-value">${cert.cipher.name}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Key Size:</span>
+                                    <span class="info-value">${cert.technical.keySize} bits</span>
+                                </div>
+                            </div>
+
+                            <div class="info-section">
+                                <h4><i class="fas fa-network-wired icon-network"></i> DNS Information</h4>
+                                <div class="info-item">
+                                    <span class="info-label">Resolved:</span>
+                                    <span class="info-value">${data.dns.resolved ? 'Yes' : 'No'}</span>
+                                </div>
+                                ${data.dns.addresses ? `
+                                    <div class="info-item">
+                                        <span class="info-label">IP Addresses:</span>
+                                        <span class="info-value">${data.dns.addresses.join(', ')}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            <div class="info-section">
+                                <h4><i class="fas fa-shield-alt icon-shield"></i> Security Analysis</h4>
+                                <div class="info-item">
+                                    <span class="info-label">Hostname Match:</span>
+                                    <span class="info-value">${cert.security.hostnameMatch ? '✅ Correctly listed' : '❌ Not listed'}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Trust Status:</span>
+                                    <span class="info-value">${cert.security.trustStatus}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Intermediate Certs:</span>
+                                    <span class="info-value">${cert.security.intermediateCertificates}</span>
+                                </div>
+                            </div>
+
+                            ${cert.security.certificateChain && cert.security.certificateChain.length > 0 ? `
+                                <div class="info-section">
+                                    <h4><i class="fas fa-link icon-network"></i> Certificate Chain</h4>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-4);">
+                                        ${cert.security.certificateChain.map((chainCert, index) => `
+                                            <div style="padding: 1rem; background: var(--secondary-50); border-radius: var(--radius); border-left: 3px solid var(--primary-500); box-shadow: var(--shadow-sm);">
+                                                <div style="font-weight: 600; color: var(--secondary-800); margin-bottom: 0.75rem; font-size: var(--font-size-sm);">
+                                                    ${index === 0 ? '🖥️ Server Certificate' : `🔗 Intermediate Certificate ${index}`}
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Common Name:</span>
+                                                    <span class="info-value">${chainCert.commonName}</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Organization:</span>
+                                                    <span class="info-value">${chainCert.organization}</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Country:</span>
+                                                    <span class="info-value">${chainCert.country}</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Serial Number:</span>
+                                                    <span class="info-value">${chainCert.serialNumber}</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Signature Algorithm:</span>
+                                                    <span class="info-value">${chainCert.signatureAlgorithm}</span>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+
+                resultContainer.html(resultHtml);
+                
+                // Update stats
+                stats.totalChecks++;
+                if (cert.validity.isExpired) {
+                    stats.expiredCerts++;
+                } else {
+                    stats.validCerts++;
+                }
+                saveStats();
+                updateStatsDisplay();
+
+            } else {
+                const errorHtml = `
+                    <div class="result-card">
+                        <div class="result-header">
+                            <h3 class="result-title">Analysis Error</h3>
+                            <span class="status-badge status-error">Error</span>
+                        </div>
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-triangle icon-warning"></i>
+                            ${data.error}
+                        </div>
+                    </div>
+                `;
+
+                resultContainer.html(errorHtml);
+                
+                // Update stats
+                stats.totalChecks++;
+                stats.errorCerts++;
+                saveStats();
+                updateStatsDisplay();
+            }
+        }
+
+        // Display batch results
+        function displayBatchResults(data) {
+            const resultContainer = $('#batchResultContainer');
+            resultContainer.empty().show();
+
+            if (data.success) {
+                let resultsHtml = '<h3 style="margin-bottom: 2rem; color: var(--secondary-800); font-size: var(--font-size-2xl);">Batch Analysis Results</h3>';
+                
+                data.results.forEach((result, index) => {
+                    const ssl = result.ssl;
+                    const statusClass = ssl.success ? (ssl.certificate.validity.isExpired ? 'status-warning' : 'status-valid') : 'status-error';
+                    const statusText = ssl.success ? (ssl.certificate.validity.isExpired ? 'Expired' : 'Valid') : 'Error';
+                    
+                    resultsHtml += `
+                        <div class="result-card">
+                            <div class="result-header">
+                                <h4 class="result-title">${result.domain}</h4>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                            ${ssl.success ? `
+                                <div class="info-item">
+                                    <span class="info-label">Subject:</span>
+                                    <span class="info-value">${ssl.certificate.subject.commonName}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Valid Until:</span>
+                                    <span class="info-value">${formatDate(ssl.certificate.validity.to)}</span>
+                                </div>
+                            ` : `
+                                <div class="error-message">
+                                    ${ssl.error}
+                                </div>
+                            `}
+                        </div>
+                    `;
+                });
+                
+                resultContainer.html(resultsHtml);
+            } else {
+                resultContainer.html(`
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle icon-warning"></i>
+                        ${data.error}
+                    </div>
+                `);
+            }
+        }
+
+        // Document ready
+        $(document).ready(function() {
+            loadStats();
+
+            // Single check form
+            $('#sslForm').submit(function(e) {
+                e.preventDefault();
+                const domain = $('#domain').val().trim();
+                
+                if (!domain) {
+                    alert('Please enter a domain name');
+                    return;
+                }
+
+                $('#loading').show();
+                $('#resultContainer').hide();
+                $('#checkBtn').prop('disabled', true);
+
+                $.ajax({
+                    url: '/api/check',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ domain: domain }),
+                    success: function(data) {
+                        displayResult(data);
+                    },
+                    error: function(xhr) {
+                        const error = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred';
+                        displayResult({ success: false, error: error });
+                    },
+                    complete: function() {
+                        $('#loading').hide();
+                        $('#checkBtn').prop('disabled', false);
+                    }
+                });
+            });
+
+            // Batch check form
+            $('#batchForm').submit(function(e) {
+                e.preventDefault();
+                const domainsText = $('#domains').val().trim();
+                
+                if (!domainsText) {
+                    alert('Please enter domain names');
+                    return;
+                }
+
+                const domains = domainsText.split('\n')
+                    .map(d => d.trim())
+                    .filter(d => d.length > 0);
+
+                if (domains.length === 0) {
+                    alert('Please enter at least one domain');
+                    return;
+                }
+
+                if (domains.length > 10) {
+                    alert('Maximum 10 domains allowed per batch');
+                    return;
+                }
+
+                $('#batchLoading').show();
+                $('#batchResultContainer').hide();
+                $('#batchBtn').prop('disabled', true);
+
+                $.ajax({
+                    url: '/api/batch-check',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ domains: domains }),
+                    success: function(data) {
+                        displayBatchResults(data);
+                    },
+                    error: function(xhr) {
+                        const error = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred';
+                        displayBatchResults({ success: false, error: error });
+                    },
+                    complete: function() {
+                        $('#batchLoading').hide();
+                        $('#batchBtn').prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,10 +1,27 @@
-version: '3'
+version: '3.8'
 
 services:
-  ssl-checker:
-    image:helloworld
-    # build: .
+  ssl-checker-pro:
+    build: .
+    container_name: ssl-checker-pro
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - ALLOWED_ORIGINS=http://localhost:3000,https://localhost:3000
     volumes:
-      - ./index.html:/app/index.html:rw
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - ssl-checker-network
+
+networks:
+  ssl-checker-network:
+    driver: bridge

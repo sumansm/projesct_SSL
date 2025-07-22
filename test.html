@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL Checker Test</title>
+</head>
+<body>
+    <h1>SSL Checker Test</h1>
+    <form id="testForm">
+        <input type="text" id="domain" name="domain" placeholder="Enter domain" required>
+        <button type="submit">Test Check</button>
+    </form>
+    <div id="result"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            console.log('jQuery loaded successfully');
+            
+            $('#testForm').submit(function(e) {
+                e.preventDefault();
+                console.log('Form submitted');
+                
+                const domain = $('#domain').val().trim();
+                console.log('Domain:', domain);
+                
+                if (!domain) {
+                    alert('Please enter a domain');
+                    return;
+                }
+                
+                $('#result').html('Checking...');
+                
+                $.ajax({
+                    url: '/api/check',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ domain: domain }),
+                    success: function(data) {
+                        console.log('Success:', data);
+                        $('#result').html('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error:', xhr.responseText);
+                        $('#result').html('Error: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
