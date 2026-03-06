@@ -10,6 +10,8 @@ const { body, validationResult } = require('express-validator');
 const winston = require('winston');
 const compression = require('compression');
 const path = require('path');
+const fs = require('fs').promises;
+const acme = require('acme-client');
 
 // Configure logging
 const logger = winston.createLogger({
@@ -87,6 +89,11 @@ app.use(express.static('public', {
   maxAge: '1d',
   etag: true
 }));
+
+// ACME HTTP-01 challenge serving
+const CHALLENGE_DIR = path.join(__dirname, '.well-known', 'acme-challenge');
+fs.mkdir(CHALLENGE_DIR, { recursive: true }).catch(() => {});
+app.use('/.well-known/acme-challenge', express.static(path.join(__dirname, '.well-known', 'acme-challenge')));
 
 // Validation middleware
 const validateDomain = [
@@ -426,6 +433,76 @@ app.post('/api/batch-check', [
     res.status(500).json({
       success: false,
       error: 'Internal server error'
+    });
+  }
+});
+
+// Generate SSL certificate via Let's Encrypt
+app.post('/api/generate-cert', [
+  body('domain')
+    .trim()
+    .notEmpty().withMessage('Domain is required')
+    .matches(/^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)+$/)
+    .withMessage('Invalid domain format — must be a fully qualified domain (e.g. example.com)'),
+  body('email')
+    .trim()
+    .isEmail().withMessage('Valid email is required for Let\'s Encrypt notifications'),
+  body('staging')
+    .optional()
+    .isBoolean()
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ success: false, error: 'Validation failed', details: errors.array() });
+  }
+
+  const { domain, email, staging = false } = req.body;
+
+  logger.info(`Certificate generation requested for ${domain} (staging: ${staging})`);
+
+  try {
+    const directoryUrl = staging
+      ? acme.directory.letsencrypt.staging
+      : acme.directory.letsencrypt.production;
+
+    const accountKey = await acme.crypto.createPrivateKey();
+    const client = new acme.Client({ directoryUrl, accountKey });
+
+    const [key, csr] = await acme.crypto.createCsr({ commonName: domain });
+
+    const certificate = await client.auto({
+      csr,
+      email,
+      termsOfServiceAgreed: true,
+      challengePriority: ['http-01'],
+      challengeCreateFn: async (authz, challenge, keyAuthorization) => {
+        const filePath = path.join(CHALLENGE_DIR, challenge.token);
+        await fs.writeFile(filePath, keyAuthorization);
+        logger.info(`ACME challenge created: ${challenge.token}`);
+      },
+      challengeRemoveFn: async (authz, challenge) => {
+        const filePath = path.join(CHALLENGE_DIR, challenge.token);
+        await fs.unlink(filePath).catch(() => {});
+        logger.info(`ACME challenge removed: ${challenge.token}`);
+      }
+    });
+
+    logger.info(`Certificate successfully issued for ${domain}`);
+
+    res.json({
+      success: true,
+      domain,
+      certificate: certificate.toString(),
+      privateKey: key.toString(),
+      message: "Certificate issued successfully by Let's Encrypt"
+    });
+
+  } catch (error) {
+    logger.error(`Certificate generation failed for ${domain}:`, error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Certificate generation failed',
+      hint: 'Make sure your domain is publicly accessible on port 80 and DNS points to this server'
     });
   }
 });

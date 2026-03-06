@@ -623,6 +623,7 @@
         .icon-warning::before { content: "⚠️"; }
         .icon-check::before { content: "✅"; }
         .icon-error::before { content: "❌"; }
+        .icon-lock::before { content: "🔒"; }
 
         /* Responsive Design */
         @media (max-width: 1024px) {
@@ -709,6 +710,9 @@
                 <button class="tab" onclick="switchTab('stats')">
                     <i class="fas fa-chart-bar icon-chart"></i> Analytics
                 </button>
+                <button class="tab" onclick="switchTab('generate')">
+                    <i class="fas fa-lock icon-lock"></i> Generate SSL
+                </button>
             </div>
 
             <!-- Single Check Tab -->
@@ -779,6 +783,83 @@
             </div>
         </div>
 
+            <!-- Generate SSL Tab -->
+            <div id="generate-tab" class="tab-content">
+                <div style="max-width: 600px;">
+                    <div class="success-message" style="margin-bottom: var(--spacing-6);">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Uses <strong>Let's Encrypt</strong> (free, trusted cert). Your domain must be publicly accessible on port 80.</span>
+                    </div>
+                    <form id="generateForm">
+                        <div class="form-group">
+                            <label class="form-label">Domain Name</label>
+                            <input type="text" id="genDomain" class="form-input" placeholder="example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="genEmail" class="form-input" placeholder="admin@example.com" required>
+                            <small style="color: var(--secondary-500); margin-top: 4px; display: block;">Used by Let's Encrypt for expiry notifications only.</small>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; color: var(--secondary-700);">
+                                <input type="checkbox" id="genStaging" style="width: 16px; height: 16px;">
+                                Use staging environment (for testing — cert won't be browser-trusted)
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="generateBtn">
+                            <i class="fas fa-lock"></i> Generate Certificate
+                        </button>
+                    </form>
+
+                    <div class="loading" id="generateLoading">
+                        <div class="spinner"></div>
+                        <p>Requesting certificate from Let's Encrypt... this may take 30–60 seconds.</p>
+                    </div>
+
+                    <div id="generateResult" style="display:none; margin-top: var(--spacing-8);">
+                        <div class="success-message" style="margin-bottom: var(--spacing-6);">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="generateSuccessMsg"></span>
+                        </div>
+                        <div style="display: grid; gap: var(--spacing-4);">
+                            <div class="info-section">
+                                <h4><i class="fas fa-certificate"></i> Certificate (cert.pem)</h4>
+                                <textarea id="certOutput" class="form-input batch-input" readonly style="font-family: monospace; font-size: 12px; min-height: 120px;"></textarea>
+                                <button class="btn btn-secondary" style="margin-top: var(--spacing-3);" onclick="downloadFile('cert.pem', document.getElementById('certOutput').value)">
+                                    <i class="fas fa-download"></i> Download cert.pem
+                                </button>
+                            </div>
+                            <div class="info-section">
+                                <h4><i class="fas fa-key"></i> Private Key (key.pem)</h4>
+                                <textarea id="keyOutput" class="form-input batch-input" readonly style="font-family: monospace; font-size: 12px; min-height: 120px;"></textarea>
+                                <button class="btn btn-secondary" style="margin-top: var(--spacing-3);" onclick="downloadFile('key.pem', document.getElementById('keyOutput').value)">
+                                    <i class="fas fa-download"></i> Download key.pem
+                                </button>
+                            </div>
+                        </div>
+                        <div class="info-section" style="margin-top: var(--spacing-4); background: var(--warning-50); border-color: var(--warning-200);">
+                            <h4 style="color: var(--warning-700);"><i class="fas fa-info-circle"></i> Next Steps</h4>
+                            <ol style="padding-left: 1.5rem; color: var(--secondary-700); line-height: 2;">
+                                <li>Download <code>cert.pem</code> and <code>key.pem</code></li>
+                                <li>Place them in the <code>nginx/certs/</code> directory</li>
+                                <li>Run <code>docker-compose restart nginx</code></li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div id="generateError" style="display:none; margin-top: var(--spacing-6);">
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <div id="generateErrorMsg"></div>
+                                <div id="generateErrorHint" style="margin-top: 4px; font-size: 0.85rem; opacity: 0.8;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="footer">
             <p>&copy; 2024 SSL Checker Pro. Enterprise-grade security validation platform.</p>
         </div>
@@ -832,9 +913,20 @@
         function switchTab(tabName) {
             $('.tab').removeClass('active');
             $('.tab-content').removeClass('active');
-            
-            $(`.tab:contains('${tabName === 'single' ? 'Single Check' : tabName === 'batch' ? 'Batch Check' : 'Analytics'}')`).addClass('active');
+            const labels = { single: 'Single Check', batch: 'Batch Check', stats: 'Analytics', generate: 'Generate SSL' };
+            $(`.tab:contains('${labels[tabName]}')`).addClass('active');
             $(`#${tabName}-tab`).addClass('active');
+        }
+
+        // Download helper
+        function downloadFile(filename, content) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         // Format date
@@ -1157,6 +1249,42 @@
                     complete: function() {
                         $('#batchLoading').hide();
                         $('#batchBtn').prop('disabled', false);
+                    }
+                });
+            });
+            // Generate cert form
+            $('#generateForm').submit(function(e) {
+                e.preventDefault();
+                const domain = $('#genDomain').val().trim();
+                const email = $('#genEmail').val().trim();
+                const staging = $('#genStaging').is(':checked');
+
+                $('#generateResult').hide();
+                $('#generateError').hide();
+                $('#generateLoading').show();
+                $('#generateBtn').prop('disabled', true);
+
+                $.ajax({
+                    url: '/api/generate-cert',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ domain, email, staging }),
+                    timeout: 120000,
+                    success: function(data) {
+                        $('#generateSuccessMsg').text(data.message);
+                        $('#certOutput').val(data.certificate);
+                        $('#keyOutput').val(data.privateKey);
+                        $('#generateResult').show();
+                    },
+                    error: function(xhr) {
+                        const resp = xhr.responseJSON || {};
+                        $('#generateErrorMsg').text(resp.error || 'Certificate generation failed');
+                        $('#generateErrorHint').text(resp.hint || '');
+                        $('#generateError').show();
+                    },
+                    complete: function() {
+                        $('#generateLoading').hide();
+                        $('#generateBtn').prop('disabled', false);
                     }
                 });
             });
